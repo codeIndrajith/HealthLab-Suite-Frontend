@@ -5,8 +5,6 @@ import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../../redux/reactReduxTypedHooks";
 import { selectAuthSliceUser } from "../../../redux/slices/authSlice";
 
-import Logo from "../../../assets/brand-logo-1.png";
-
 // icons
 import { LuLayoutDashboard } from "react-icons/lu";
 import { GrNotes } from "react-icons/gr";
@@ -50,9 +48,9 @@ const DashboardSidebarNav: React.FC<DashboardSidebarNavProps> = ({
 
   return (
     <div
-      className={`min-w-[350px] w-[350px] max-w-[350px] ${
+      className={`min-w-[300px] w-[300px] max-w-[300px] ${
         isMinimized ? "-translate-x-full" : ""
-      } border-r-2 border-slate-100 transition-transform min-h-screen h-screen max-h-screen bg-slate-50 fixed top-0 left-0 z-50 shadow-xl`}
+      } border-r-2 border-slate-100 transition-transform min-h-screen h-screen max-h-screen bg-black fixed top-0 left-0 z-50 shadow-xl`}
     >
       <div className="w-full relative border-white z-30 max-h-[80px]">
         <div className="w-full max-h-[78px] overflow-hidden">
@@ -63,7 +61,7 @@ const DashboardSidebarNav: React.FC<DashboardSidebarNavProps> = ({
         </div>
         <button
           type="button"
-          className="absolute top-1/2 -translate-y-1/2 translate-x-full z-30 right-0 w-[40px] h-[40px] rounded-sm text-white flex items-center justify-center border-2 border-white custom-bg-gradient"
+          className="absolute top-1/2 -translate-y-1/2 translate-x-full z-30 right-0 w-[40px] h-[40px] rounded-sm text-white flex items-center justify-center border-2 border-white bg-black"
           onClick={() => setIsMinimized((prev) => !prev)}
         >
           {isMinimized ? (
@@ -74,7 +72,7 @@ const DashboardSidebarNav: React.FC<DashboardSidebarNavProps> = ({
         </button>
       </div>
       {/* <div className="h-[80px] w-full"></div> */}
-      <nav className="h-full pt-10 overflow-y-scroll no-scrollbar">
+      <nav className="h-full pt-10">
         <ul>
           {children ? (
             children({ handleNavLinkChange, currentPath })
@@ -160,13 +158,8 @@ export const DashboardSidebarNavBrand: React.FC<
       } ${isBgApplied && "custom-bg-gradient"}`}
       onClick={() => navigate(brandNavigationTo)}
     >
-      <img
-        src={Logo}
-        alt="Norvestra Health"
-        className="w-8 h-8 object-contain rounded-sm"
-      />
       <span className="md:text-base font-semibold text-sm text-white">
-        Novestra Health
+        HealthLab Suite
       </span>
     </div>
   );

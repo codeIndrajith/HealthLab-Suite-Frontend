@@ -11,9 +11,7 @@ const queryClient = new QueryClient();
 createRoot(document.getElementById("root")!).render(
   <Provider store={store}>
     <QueryClientProvider client={queryClient}>
-      <Router>
-        <App />
-      </Router>
+      <App />
     </QueryClientProvider>
   </Provider>
 );

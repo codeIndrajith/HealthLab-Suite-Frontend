@@ -1,7 +1,7 @@
 import React from "react";
 import type { IconType } from "react-icons";
 
-interface HIMSTextFieldProps {
+interface HIMSEmailFieldProps {
   Icon?: IconType;
   displayLabel?: string;
   isRequired?: boolean;
@@ -14,24 +14,27 @@ interface HIMSTextFieldProps {
   name?: string;
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
   onBlur?: React.ChangeEventHandler<HTMLInputElement>;
-  ref?: React.Ref<HTMLInputElement>;
+  value?: string;
+  autoComplete?: string;
 }
 
-const HIMSTextField = React.forwardRef<HTMLInputElement, HIMSTextFieldProps>(
+const HIMSEmailField = React.forwardRef<HTMLInputElement, HIMSEmailFieldProps>(
   (
     {
       Icon,
       displayLabel,
       isRequired = false,
-      placeholderText,
+      placeholderText = "Enter your email",
       extraInfo,
       error,
       iconSize = 14,
       classNames,
       isDisabled = false,
-      name,
+      name = "email",
       onChange,
       onBlur,
+      value,
+      autoComplete = "email",
     },
     ref
   ) => {
@@ -41,25 +44,29 @@ const HIMSTextField = React.forwardRef<HTMLInputElement, HIMSTextFieldProps>(
           <div className="flex items-center gap-2">
             {Icon && <Icon className="text-primary" fontSize={iconSize} />}
             <label className="text-sm text-label">
-              {displayLabel}{" "}
+              {displayLabel || "Email"}{" "}
               {isRequired && <span className="text-red-600">*</span>}
             </label>
           </div>
         )}
 
-        {extraInfo && <small>{extraInfo}</small>}
+        {extraInfo && (
+          <small className="text-xs text-gray-500">{extraInfo}</small>
+        )}
 
         <input
           ref={ref}
           name={name}
           onChange={onChange}
           onBlur={onBlur}
-          type="text"
+          type="email"
           placeholder={placeholderText}
           className={`w-full rounded-md text-sm p-2  ${
             error ? "border border-red-500" : "border border-gray-200"
           }`}
           disabled={isDisabled}
+          value={value}
+          autoComplete={autoComplete}
         />
 
         {error && (
@@ -72,4 +79,6 @@ const HIMSTextField = React.forwardRef<HTMLInputElement, HIMSTextFieldProps>(
   }
 );
 
-export default HIMSTextField;
+HIMSEmailField.displayName = "HIMSEmailField";
+
+export default HIMSEmailField;

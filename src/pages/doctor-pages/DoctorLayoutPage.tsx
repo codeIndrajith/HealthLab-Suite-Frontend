@@ -7,7 +7,7 @@ import { Outlet } from "react-router-dom";
 const DoctorLayoutPage: React.FC = () => {
   return (
     <div className="w-screen min-h-screen max-h-screen h-screen overflow-x-hidden overflow-y-hidden flex">
-      <DashboardSidebarNav brandNavigationTo="/doctor/dashboard">
+      <DashboardSidebarNav brandNavigationTo="/dashboard/doctor">
         {({ handleNavLinkChange, currentPath }) => (
           <DoctorDashboardSideNavContent
             handleNavLinkChange={handleNavLinkChange}
@@ -17,7 +17,7 @@ const DoctorLayoutPage: React.FC = () => {
       </DashboardSidebarNav>
       <div className="w-full overflow-x-hidden overflow-y-hidden">
         {/* Dashboard Header */}
-        <DashboardHeader brandNavigationTo="/pharmacy/dashboard" />
+        <DashboardHeader brandNavigationTo="/" />
 
         {/* Dashboard Content */}
         <div className="w-full h-[calc(100vh-130px)]">

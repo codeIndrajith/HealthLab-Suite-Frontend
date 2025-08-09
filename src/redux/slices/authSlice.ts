@@ -45,6 +45,13 @@ const authSlice = createSlice({
         user_role: payload.user_role,
       };
       state.user = user;
+      state.isAuthenticated = true;
+    },
+    logout: (state) => {
+      state.user = null;
+      state.isAuthenticated = false;
+
+      localStorage.removeItem("token");
     },
   },
 });
@@ -56,7 +63,7 @@ export const selectAuthSliceIsAuthenticated = (state: RootState) =>
   state.auth.isAuthenticated;
 
 // actions
-export const { setAuthUser, updateAuthUser } = authSlice.actions;
+export const { setAuthUser, updateAuthUser, logout } = authSlice.actions;
 
 // reducer
 export default authSlice.reducer;

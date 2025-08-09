@@ -1,19 +1,59 @@
 import React, { useState } from "react";
+import HIMSEmailField from "../../../components/inputs/HIMSEmailField";
+import { MdEmail } from "react-icons/md";
+import HIMSPasswordField from "../../../components/inputs/HIMSPasswordField";
+import { FaUserLock } from "react-icons/fa";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  signInSchema,
+  type SignInSchemaType,
+} from "../../../schema/auth/signInSchema";
+import { Link, useNavigate } from "react-router-dom";
+import { userSignin } from "../../../api/auth/signin";
+import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
+import toast from "react-hot-toast";
+import { setAuthUser } from "../../../redux/slices/authSlice";
+import { useAppDispatch } from "../../../redux/reactReduxTypedHooks";
 
 const SignInPage: React.FC = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const axiosPrivate = useAxiosPrivate();
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignInSchemaType>({
+    resolver: zodResolver(signInSchema),
+  });
+
+  const signInHandler = async (data: SignInSchemaType) => {
     setIsLoading(true);
-
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      const response = await userSignin({ formData: data, axiosPrivate });
+      if (response.success) {
+        const token = response?.token ?? "";
+        localStorage.setItem("token", token);
+        if (response?.user.user_role === "Doctor") {
+          const authData = {
+            id: response.user?.id,
+            name: response.user?.name,
+            email: response.user?.email,
+            user_role: response.user?.user_role,
+          };
+          dispatch(setAuthUser(authData));
+          navigate("/dashboard/doctor");
+        }
+        toast.success("Sign In Complete");
+      }
+    } catch (error: any) {
+      toast.error(error.toString());
+    } finally {
       setIsLoading(false);
-      console.log("Sign in attempted with:", { email, password });
-    }, 1000);
+    }
   };
 
   return (
@@ -65,81 +105,29 @@ const SignInPage: React.FC = () => {
             </div>
 
             {/* Form */}
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit(signInHandler)} className="space-y-6">
               {/* Email Field */}
               <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  Email Address
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <svg
-                      className="h-5 w-5 text-gray-400"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"
-                      />
-                    </svg>
-                  </div>
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                    placeholder="Enter your email"
-                  />
-                </div>
+                <HIMSEmailField
+                  Icon={MdEmail}
+                  displayLabel="Email"
+                  placeholderText="Enter Email Address"
+                  isRequired
+                  {...register("email")}
+                  error={errors.email?.message?.toString()}
+                />
               </div>
 
               {/* Password Field */}
               <div>
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  Password
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <svg
-                      className="h-5 w-5 text-gray-400"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                      />
-                    </svg>
-                  </div>
-                  <input
-                    id="password"
-                    name="password"
-                    type="password"
-                    autoComplete="current-password"
-                    required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                    placeholder="Enter your password"
-                  />
-                </div>
+                <HIMSPasswordField
+                  Icon={FaUserLock}
+                  displayLabel="Password"
+                  placeholderText="Enter Password"
+                  isRequired
+                  {...register("password")}
+                  error={errors.password?.message?.toString()}
+                />
               </div>
 
               {/* Submit Button */}
@@ -183,12 +171,12 @@ const SignInPage: React.FC = () => {
             <div className="mt-6 text-center">
               <p className="text-sm text-gray-600">
                 {"Don't have an account? "}
-                <a
-                  href="/signin"
+                <Link
+                  to="/signup"
                   className="font-medium text-blue-600 hover:text-blue-500 transition-colors"
                 >
                   Sign up here
-                </a>
+                </Link>
               </p>
             </div>
           </div>

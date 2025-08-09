@@ -1,6 +1,11 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import { useAppSelector } from "../../redux/reactReduxTypedHooks";
+import { selectAuthSlice } from "../../redux/slices/authSlice";
 
 const HomePage: React.FC = () => {
+  const navigate = useNavigate();
+  const auth = useAppSelector(selectAuthSlice);
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       {/* Header */}
@@ -41,14 +46,31 @@ const HomePage: React.FC = () => {
           </a>
         </nav>
 
-        <div className="flex items-center space-x-3">
-          <button className="px-4 py-2 text-xs text-gray-600 hover:text-gray-900 transition-colors">
-            Sign In
-          </button>
-          <button className="px-6 py-2 text-xs bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl">
-            Sign Up
-          </button>
-        </div>
+        {auth.isAuthenticated === false ? (
+          <div className="flex items-center space-x-3">
+            <button
+              onClick={() => navigate("/signin")}
+              className="px-4 py-2 text-xs text-gray-600 hover:text-gray-900 hover:border rounded-md hover:bg-gradient-to-r from-blue-600 to-purple-600 hover:text-white cursor-pointer"
+            >
+              Sign In
+            </button>
+            <button
+              onClick={() => navigate("/signup")}
+              className="px-6 py-2 text-xs bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all cursor-pointer duration-200 shadow-lg hover:shadow-xl"
+            >
+              Sign Up
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-center space-x-3">
+            <button
+              onClick={() => navigate("/dashboard/doctor")}
+              className="px-6 py-2 text-xs bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all cursor-pointer duration-200 shadow-lg hover:shadow-xl"
+            >
+              Dashboard
+            </button>
+          </div>
+        )}
       </header>
 
       {/* Hero Section */}
@@ -67,9 +89,21 @@ const HomePage: React.FC = () => {
             efficiently manage patient lab tests.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl text-lg font-semibold">
-              Sign up
-            </button>
+            {auth.isAuthenticated === true ? (
+              <button
+                onClick={() => navigate("/dashboard/doctor")}
+                className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl text-lg font-semibold"
+              >
+                Dashboard
+              </button>
+            ) : (
+              <button
+                onClick={() => navigate("/signup")}
+                className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl text-lg font-semibold"
+              >
+                Sign up
+              </button>
+            )}
           </div>
         </div>
       </section>

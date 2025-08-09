@@ -1,20 +1,41 @@
 import "./App.css";
-import { Routes, Route } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import NotFoundPage from "./pages/404/NotFoundPage";
 import UnauthorizedPage from "./pages/401/UnauthorizedPage";
 import OnboardingPage from "./pages/onboarding-page/OnboardingPage";
 import HomePage from "./pages/home/HomePage";
 import SignInPage from "./pages/auth/signin/SignInPage";
 import SignupPage from "./pages/auth/signup/SignupPage";
+import PersistAuth from "./components/auth/PersisAuth";
+import DoctorLayoutPage from "./pages/doctor-pages/DoctorLayoutPage";
+import DoctorDashboardPage from "./pages/doctor-pages/pages/DoctorDashboardPage";
+import DoctorLabTestMangePage from "./pages/doctor-pages/pages/DoctorLabTestMangePage";
+import DoctorPatientTestManage from "./pages/doctor-pages/pages/DoctorPatientTestManage";
 
 function App() {
   return (
-    <div>
+    <Router>
+      <Toaster />
       <Routes>
         {/* <Route path="/" element={<PersistAuth />}> */}
-        <Route index element={<HomePage />} />
+
         <Route path="/signin" element={<SignInPage />} />
         <Route path="/signup" element={<SignupPage />} />
+        <Route element={<PersistAuth />}>
+          <Route index element={<HomePage />} />
+          <Route path="/dashboard" element={<DoctorLayoutPage />}>
+            <Route path="/dashboard/doctor" element={<DoctorDashboardPage />} />
+            <Route
+              path="/dashboard/doctor/lab-tests"
+              element={<DoctorLabTestMangePage />}
+            />
+            <Route
+              path="/dashboard/doctor/patient-tests"
+              element={<DoctorPatientTestManage />}
+            />
+          </Route>
+        </Route>
 
         <Route path="/onboarding" element={<OnboardingPage />} />
 
@@ -28,7 +49,7 @@ function App() {
         <Route path="*" element={<NotFoundPage />} />
         {/* </Route> */}
       </Routes>
-    </div>
+    </Router>
   );
 }
 

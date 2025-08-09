@@ -1,4 +1,6 @@
 import React from "react";
+import { CiBeaker1 } from "react-icons/ci";
+import { FaUser } from "react-icons/fa";
 import { LuLayoutDashboard } from "react-icons/lu";
 import {
   MdLocalPharmacy,
@@ -19,14 +21,12 @@ const DoctorDashboardSideNavContent: React.FC<
     <>
       <button
         className="w-full"
-        onClick={() => handleNavLinkChange("/pharmacy/dashboard")}
+        onClick={() => handleNavLinkChange("/dashboard/doctor")}
       >
         <li
           className={`w-full flex items-center gap-5 px-8 py-4 ${
-            currentPath === "/pharmach/dashboard"
-              ? "text-primary"
-              : "text-gray-500"
-          } transition-all text-sm hover:custom-bg-gradient hover:text-white`}
+            currentPath === "/dashboard/doctor" ? "text-white" : "text-gray-500"
+          } transition-all text-sm hover:text-gray-400 cursor-pointer`}
         >
           <LuLayoutDashboard fontSize={20} className="" />
           Dashboard
@@ -35,41 +35,37 @@ const DoctorDashboardSideNavContent: React.FC<
 
       <button
         className="w-full"
-        onClick={() =>
-          handleNavLinkChange("/pharmacy/dashboard/register/pharmacist")
-        }
+        onClick={() => handleNavLinkChange("/dashboard/doctor/lab-tests")}
       >
         <li
-          className={`w-full flex items-center gap-5 px-8 py-4 transition-all text-sm ${
-            currentPath === "/pharmacy/dashboard/register/pharmacist"
-              ? "text-primary"
+          className={`w-full flex items-center gap-5 px-8 py-4 ${
+            currentPath === "/dashboard/doctor/lab-tests"
+              ? "text-white"
               : "text-gray-500"
-          } hover:custom-bg-gradient hover:text-white`}
+          } transition-all text-sm hover:text-gray-400 cursor-pointer`}
         >
-          <MdPersonAdd fontSize={22} className="" />
-          Register pharmacist
+          <CiBeaker1 fontSize={22} className="" />
+          Lab Test Manage
         </li>
       </button>
 
       <button
         className="w-full"
-        onClick={() =>
-          handleNavLinkChange("/pharmacy/dashboard/manage/pharmacists")
-        }
+        onClick={() => handleNavLinkChange("/dashboard/doctor/patient-tests")}
       >
         <li
-          className={`w-full flex items-center gap-5 px-8 py-4 transition-all text-sm ${
-            currentPath === "/pharmacy/dashboard/manage/pharmacists"
-              ? "text-primary"
+          className={`w-full flex items-center gap-5 px-8 py-4 ${
+            currentPath === "/dashboard/doctor/patient-tests"
+              ? "text-white"
               : "text-gray-500"
-          } hover:custom-bg-gradient hover:text-white`}
+          } transition-all text-sm hover:text-gray-400 cursor-pointer`}
         >
-          <MdPeople fontSize={22} className="" />
-          Manage pharmacists
+          <FaUser fontSize={22} className="" />
+          Patient Test Manage
         </li>
       </button>
 
-      <button
+      {/* <button
         className="w-full"
         onClick={() => handleNavLinkChange("/pharmacy/dashboard/add/pharmacy")}
       >
@@ -83,7 +79,7 @@ const DoctorDashboardSideNavContent: React.FC<
           <MdLocalPharmacy fontSize={22} className="" />
           Add pharmacy
         </li>
-      </button>
+      </button> */}
     </>
   );
 };
