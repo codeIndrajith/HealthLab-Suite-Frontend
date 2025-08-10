@@ -1,5 +1,6 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
+import logo from "../../../assets/logo.png";
 import { logout } from "../../../redux/slices/authSlice";
 import { useDispatch } from "react-redux";
 
@@ -18,17 +19,13 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
     navigate("/");
   };
   return (
-    <header className="bg-white shadow-sm sticky top-0 z-10">
+    <header className="bg-white py-2 shadow-sm sticky top-0 z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo on the left */}
           <div className="flex-shrink-0 flex items-center">
             <Link to={`${brandNavigationTo}`}>
-              <img
-                className="h-8 w-auto"
-                src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
-                alt="Logo"
-              />
+              <img className="h-16 w-auto" src={logo} alt="Logo" />
             </Link>
           </div>
 

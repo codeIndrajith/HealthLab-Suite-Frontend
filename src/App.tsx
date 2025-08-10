@@ -12,6 +12,7 @@ import DoctorLayoutPage from "./pages/doctor-pages/DoctorLayoutPage";
 import DoctorDashboardPage from "./pages/doctor-pages/pages/DoctorDashboardPage";
 import DoctorLabTestMangePage from "./pages/doctor-pages/pages/DoctorLabTestMangePage";
 import DoctorPatientTestManage from "./pages/doctor-pages/pages/DoctorPatientTestManage";
+import DoctorViewAllLabTestPage from "./pages/doctor-pages/pages/DoctorViewAllLabTestPage";
 
 function App() {
   return (
@@ -27,8 +28,16 @@ function App() {
           <Route path="/dashboard" element={<DoctorLayoutPage />}>
             <Route path="/dashboard/doctor" element={<DoctorDashboardPage />} />
             <Route
-              path="/dashboard/doctor/lab-tests"
+              path="/dashboard/doctor/lab-tests/new"
               element={<DoctorLabTestMangePage />}
+            />
+            <Route
+              path="/dashboard/doctor/lab-tests/:testId/update"
+              element={<DoctorLabTestMangePage />}
+            />
+            <Route
+              path="/dashboard/doctor/lab-tests"
+              element={<DoctorViewAllLabTestPage />}
             />
             <Route
               path="/dashboard/doctor/patient-tests"

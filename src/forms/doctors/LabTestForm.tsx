@@ -2,74 +2,157 @@
 
 import type React from "react";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BiChevronDown, BiSave } from "react-icons/bi";
+import HIMSSelectField from "../../components/inputs/HIMSSelectField";
+import { CiBeaker1 } from "react-icons/ci";
+import { useQuery } from "@tanstack/react-query";
+import { TEST_CATEGORY } from "../../queris/public.queries";
+import { getAllTestCategories } from "../../api/public/testCategory.api";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import HIMSTextField from "../../components/inputs/HIMSTextField";
+import {
+  FaCentercode,
+  FaPrescriptionBottleAlt,
+  FaRupeeSign,
+  FaUtensils,
+} from "react-icons/fa";
+import { GrDocumentTest } from "react-icons/gr";
+import HIMSTextareaField from "../../components/inputs/HIMSTextareaField";
+import {
+  MdOutlineAccessTimeFilled,
+  MdOutlineDescription,
+} from "react-icons/md";
+import HIMSNumberField from "../../components/inputs/HIMSNumberField";
+import HIMSRadioGroup from "../../components/inputs/HIMSRadioGroup";
+import { Controller, useForm } from "react-hook-form";
+import {
+  labTestSchema,
+  type LabTestSchemaType,
+} from "../../schema/doctor/lab-test/labTestSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  createLabTest,
+  getLabTest,
+  updateTest,
+} from "../../api/doctor/lab-tests/labTest.api";
+import toast from "react-hot-toast";
+import { useLocation, useParams } from "react-router-dom";
 
-interface LabTestForm {
-  categoryId: string;
-  code: string;
-  name: string;
-  description: string;
-  preparation_instructions: string;
-  turnaround_time_hours: number;
-  is_fasting_required: boolean;
-  price: number;
+export interface FastingOption {
+  id: boolean;
+  label: string;
 }
 
-interface Category {
-  id: string;
-  name: string;
-}
-
-const categories: Category[] = [
-  { id: "8a4e2b01-1f34-4d3a-9f1a-7d2b36a6a001", name: "Blood Tests" },
-  { id: "8a4e2b01-1f34-4d3a-9f1a-7d2b36a6a002", name: "Urine Tests" },
-  { id: "8a4e2b01-1f34-4d3a-9f1a-7d2b36a6a003", name: "Imaging Tests" },
-  { id: "8a4e2b01-1f34-4d3a-9f1a-7d2b36a6a004", name: "Cardiac Tests" },
-  { id: "8a4e2b01-1f34-4d3a-9f1a-7d2b36a6a005", name: "Metabolic Tests" },
+export const fastingOptions: FastingOption[] = [
+  { id: true, label: "Yes" },
+  { id: false, label: "No" },
 ];
 
-export default function LabTestForm() {
-  const [formData, setFormData] = useState<LabTestForm>({
-    categoryId: "8a4e2b01-1f34-4d3a-9f1a-7d2b36a6a001",
-    code: "BT-001",
-    name: "Complete Blood Count (CBC)",
-    description:
-      "Measures red and white blood cells, platelets, hemoglobin, and hematocrit.",
-    preparation_instructions:
-      "No special preparation needed unless instructed.",
-    turnaround_time_hours: 24,
-    is_fasting_required: false,
-    price: 1500.0,
+const LabTestForm: React.FC = () => {
+  const params = useParams();
+  const testId = params?.testId || null;
+  console.log(testId);
+  const axiosPrivate = useAxiosPrivate();
+  const [isSubmtting, setIsSubmitting] = useState<boolean>(false);
+
+  const { data: testCategories, isLoading } = useQuery({
+    queryKey: [TEST_CATEGORY],
+    queryFn: () =>
+      getAllTestCategories({
+        axiosPrivate,
+      }),
   });
 
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [errors, setErrors] = useState<Partial<LabTestForm>>({});
+  const {
+    register,
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<LabTestSchemaType>({
+    resolver: zodResolver(labTestSchema),
+    defaultValues: {
+      categoryId: "",
+      code: "",
+      name: "",
+      description: "",
+      preparationInstructions: "",
+      turnaroundTime: 0,
+      price: 0,
+      fasting: {
+        id: false,
+        label: "No",
+      },
+    },
+  });
 
-  const handleInputChange = (
-    field: keyof LabTestForm,
-    value: string | number | boolean
-  ) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-    // Clear error when user starts typing
-    if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: undefined }));
+  useEffect(() => {
+    if (testId === null) return;
+
+    const fetchTestData = async () => {
+      try {
+        const fetchTest = await getLabTest({ testId, axiosPrivate });
+        if (fetchTest) {
+          reset({
+            categoryId: fetchTest?.data?.categoryId,
+            code: fetchTest?.data?.code,
+            name: fetchTest?.data?.name,
+            description: fetchTest?.data?.decription,
+            preparationInstructions: fetchTest?.data?.preparation_instructions,
+            turnaroundTime: fetchTest?.data?.turnaround_time_hours,
+            price: fetchTest?.data?.price,
+            fasting: {
+              id: fetchTest?.data?.is_fasting_required,
+              label:
+                fetchTest?.data?.is_fasting_required === true ? "Yes" : "No",
+            },
+          });
+        }
+      } catch (error: any) {
+        console.error("Failed to fetch test data:", error);
+      }
+    };
+
+    fetchTestData();
+  }, [testId]);
+
+  const testHandler = async (data: LabTestSchemaType) => {
+    setIsSubmitting(true);
+    try {
+      if (testId === null) {
+        const res = await createLabTest({ formData: data, axiosPrivate });
+        if (res.success) {
+          toast.success("Lab test create successfull");
+          reset({
+            categoryId: "",
+            code: "",
+            name: "",
+            description: "",
+            preparationInstructions: "",
+            turnaroundTime: 0,
+            price: 0,
+            fasting: {
+              id: false,
+              label: "No",
+            },
+          });
+        }
+      } else {
+        const res = await updateTest({ formData: data, testId, axiosPrivate });
+        if (res.success) {
+          toast.success("Lab test update successfull");
+        }
+      }
+    } catch (error: any) {
+      toast.error(error.toString());
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    console.log("Form submitted:", formData);
-    // Handle form submission here
-  };
-
-  const selectedCategory = categories.find(
-    (cat) => cat.id === formData.categoryId
-  );
-
   return (
-    <div className="bg-white overflow-y-auto">
+    <div className="bg-white h-screen overflow-y-auto">
       {/* Header */}
       <div className="bg-gradient-to-r from-blue-600 to-green-600 p-8 sm:px-16 sm:py-6">
         <h1 className="text-3xl font-bold text-white mb-2">
@@ -81,251 +164,179 @@ export default function LabTestForm() {
       </div>
 
       {/* Form */}
-      <form onSubmit={handleSubmit} className="p-8 sm:px-16 sm:py-4 space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <form onSubmit={handleSubmit(testHandler)} className="p-8 sm:p-16">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
           {/* Category Dropdown */}
-          <div className="space-y-2">
-            <label className="block text-sm font-semibold text-gray-700">
-              Test Category *
-            </label>
-            <div className="relative">
-              <button
-                type="button"
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className={`w-full px-4 py-3 text-left bg-white border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 ${
-                  errors.categoryId
-                    ? "border-red-500"
-                    : "border-gray-300 hover:border-blue-400"
-                }`}
-              >
-                <span className="block truncate">
-                  {selectedCategory
-                    ? selectedCategory.name
-                    : "Select a category"}
-                </span>
-                <BiChevronDown
-                  className={`absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 transition-transform duration-200 ${
-                    isDropdownOpen ? "rotate-180" : ""
-                  }`}
-                />
-              </button>
-
-              {isDropdownOpen && (
-                <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-auto">
-                  {categories.map((category) => (
-                    <button
-                      key={category.id}
-                      type="button"
-                      onClick={() => {
-                        handleInputChange("categoryId", category.id);
-                        setIsDropdownOpen(false);
-                      }}
-                      className={`w-full px-4 py-3 text-left hover:bg-blue-50 transition-colors duration-150 ${
-                        formData.categoryId === category.id
-                          ? "bg-blue-100 text-blue-700"
-                          : "text-gray-700"
-                      }`}
-                    >
-                      {category.name}
-                    </button>
-                  ))}
+          <div className="">
+            {isLoading ? (
+              <div className="flex flex-col gap-2 relative pb-5 animate-pulse">
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 bg-gray-300 rounded-full" />
+                  <div className="w-24 h-4 bg-gray-300 rounded" />
                 </div>
-              )}
-            </div>
+                <div className="w-32 h-3 bg-gray-200 rounded" />
+                <div className="w-full h-10 bg-gray-200 rounded-md" />
+                <div className="w-20 h-3 bg-gray-200 rounded absolute bottom-1 left-0" />
+              </div>
+            ) : (
+              <HIMSSelectField
+                Icon={CiBeaker1}
+                displayLabel="Test Category"
+                isRequired
+                options={testCategories?.data}
+                optionKey="id"
+                optionValue="id"
+                optionDisplayText="name"
+                isDefaultOptionRequired
+                defaultOptionText="--select lab test category--"
+                {...register("categoryId")}
+                error={errors.categoryId?.message?.toString()}
+              />
+            )}
           </div>
 
           {/* Test Code */}
-          <div className="space-y-2">
-            <label className="block text-sm font-semibold text-gray-700">
-              Test Code *
-            </label>
-            <input
-              type="text"
-              value={formData.code}
-              onChange={(e) => handleInputChange("code", e.target.value)}
-              className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 ${
-                errors.code
-                  ? "border-red-500"
-                  : "border-gray-300 hover:border-blue-400"
-              }`}
-              placeholder="Enter test code (e.g., BT-001)"
-            />
-          </div>
-        </div>
-
-        {/* Test Name */}
-        <div className="space-y-2">
-          <label className="block text-sm font-semibold text-gray-700">
-            Test Name *
-          </label>
-          <input
-            type="text"
-            value={formData.name}
-            onChange={(e) => handleInputChange("name", e.target.value)}
-            className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 ${
-              errors.name
-                ? "border-red-500"
-                : "border-gray-300 hover:border-blue-400"
-            }`}
-            placeholder="Enter test name"
-          />
-        </div>
-
-        {/* Description */}
-        <div className="space-y-2">
-          <label className="block text-sm font-semibold text-gray-700">
-            Description *
-          </label>
-          <textarea
-            value={formData.description}
-            onChange={(e) => handleInputChange("description", e.target.value)}
-            rows={3}
-            className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 resize-none ${
-              errors.description
-                ? "border-red-500"
-                : "border-gray-300 hover:border-blue-400"
-            }`}
-            placeholder="Describe what this test measures"
-          />
-        </div>
-
-        {/* Preparation Instructions */}
-        <div className="space-y-2">
-          <label className="block text-sm font-semibold text-gray-700">
-            Preparation Instructions *
-          </label>
-          <textarea
-            value={formData.preparation_instructions}
-            onChange={(e) =>
-              handleInputChange("preparation_instructions", e.target.value)
-            }
-            rows={3}
-            className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 resize-none ${
-              errors.preparation_instructions
-                ? "border-red-500"
-                : "border-gray-300 hover:border-blue-400"
-            }`}
-            placeholder="Enter preparation instructions for patients"
-          />
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Turnaround Time */}
-          <div className="space-y-2">
-            <label className="block text-sm font-semibold text-gray-700">
-              Turnaround Time (Hours) *
-            </label>
-            <input
-              type="number"
-              value={formData.turnaround_time_hours}
-              onChange={(e) =>
-                handleInputChange(
-                  "turnaround_time_hours",
-                  Number.parseInt(e.target.value) || 0
-                )
-              }
-              min="1"
-              className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 ${
-                errors.turnaround_time_hours
-                  ? "border-red-500"
-                  : "border-gray-300 hover:border-blue-400"
-              }`}
-              placeholder="24"
+          <div className="">
+            <HIMSTextField
+              Icon={FaCentercode}
+              displayLabel="Test Code"
+              placeholderText="Enter Test Code"
+              isRequired
+              {...register("code")}
+              error={errors.code?.message?.toString()}
             />
           </div>
 
-          {/* Price */}
-          <div className="space-y-2">
-            <label className="block text-sm font-semibold text-gray-700">
-              Price ($) *
-            </label>
-            <input
-              type="number"
-              value={formData.price}
-              onChange={(e) =>
-                handleInputChange(
-                  "price",
-                  Number.parseFloat(e.target.value) || 0
-                )
-              }
-              min="0"
-              step="0.01"
-              className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 ${
-                errors.price
-                  ? "border-red-500"
-                  : "border-gray-300 hover:border-blue-400"
-              }`}
-              placeholder="1500.00"
+          {/* Test Name */}
+          <div className="">
+            <HIMSTextField
+              Icon={GrDocumentTest}
+              displayLabel="Test Name"
+              placeholderText="Enter Test Name"
+              isRequired
+              {...register("name")}
+              error={errors.name?.message?.toString()}
             />
           </div>
 
-          {/* Fasting Required */}
-          <div className="space-y-2">
-            <label className="block text-sm font-semibold text-gray-700">
-              Fasting Required
-            </label>
-            <div className="flex items-center space-x-4 pt-3">
-              <label className="flex items-center cursor-pointer">
-                <input
-                  type="radio"
-                  name="fasting"
-                  checked={formData.is_fasting_required === true}
-                  onChange={() =>
-                    handleInputChange("is_fasting_required", true)
-                  }
-                  className="sr-only"
-                />
-                <div
-                  className={`w-5 h-5 rounded-full border-2 mr-2 flex items-center justify-center transition-all duration-200 ${
-                    formData.is_fasting_required === true
-                      ? "border-blue-500 bg-gradient-to-r from-blue-600 to-green-600"
-                      : "border-gray-300"
-                  }`}
-                >
-                  {formData.is_fasting_required === true && (
-                    <div className="w-2 h-2 rounded-full bg-white"></div>
-                  )}
-                </div>
-                <span className="text-sm text-gray-700">Yes</span>
-              </label>
-              <label className="flex items-center cursor-pointer">
-                <input
-                  type="radio"
-                  name="fasting"
-                  checked={formData.is_fasting_required === false}
-                  onChange={() =>
-                    handleInputChange("is_fasting_required", false)
-                  }
-                  className="sr-only"
-                />
-                <div
-                  className={`w-5 h-5 rounded-full border-2 mr-2 flex items-center justify-center transition-all duration-200 ${
-                    formData.is_fasting_required === false
-                      ? "border-blue-500 bg-gradient-to-r from-blue-600 to-green-600"
-                      : "border-gray-300"
-                  }`}
-                >
-                  {formData.is_fasting_required === false && (
-                    <div className="w-2 h-2 rounded-full bg-white"></div>
-                  )}
-                </div>
-                <span className="text-sm text-gray-700">No</span>
-              </label>
+          <div className="md:col-span-3">
+            {/* Description */}
+            <div>
+              <HIMSTextareaField
+                Icon={MdOutlineDescription}
+                displayLabel="Description"
+                placeholderText="Enter Description"
+                isRequired
+                {...register("description")}
+                error={errors.description?.message?.toString()}
+              />
+            </div>
+
+            {/* Preparation Instructions */}
+            <div>
+              <HIMSTextareaField
+                Icon={FaPrescriptionBottleAlt}
+                displayLabel="Preparation Instructions"
+                placeholderText="Enter Preparation Instructions"
+                isRequired
+                {...register("preparationInstructions")}
+                error={errors.preparationInstructions?.message?.toString()}
+              />
+            </div>
+          </div>
+
+          <div className="md:col-span-3">
+            {/* Turnaround Time */}
+            <div className="">
+              <HIMSNumberField
+                Icon={MdOutlineAccessTimeFilled}
+                displayLabel="Turnaround Time"
+                placeholderText="Enter Turnaround Time"
+                min={0}
+                isRequired
+                {...register("turnaroundTime", {
+                  setValueAs: (value: string) => (value ? Number(value) : 0),
+                })}
+                error={errors.turnaroundTime?.message?.toString()}
+              />
+            </div>
+
+            {/* Price */}
+            <div className="">
+              <HIMSNumberField
+                Icon={FaRupeeSign}
+                displayLabel="Price"
+                placeholderText="Enter Price"
+                min={0}
+                isRequired
+                {...register("price", {
+                  setValueAs: (value: string) => (value ? Number(value) : 0),
+                })}
+                error={errors.price?.message?.toString()}
+              />
+            </div>
+
+            {/* Fasting Required */}
+            <div className="">
+              <Controller
+                name="fasting"
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <HIMSRadioGroup
+                    Icon={FaUtensils}
+                    displayLabel="Fasting"
+                    name="fasting"
+                    options={fastingOptions}
+                    optionKey="id"
+                    displayKey="label"
+                    onChange={onChange}
+                    value={value}
+                    error={errors.fasting?.message?.toString()}
+                  />
+                )}
+              />
             </div>
           </div>
         </div>
 
         {/* Submit Button */}
-        <div className="flex justify-end pt-6">
+        <div className="flex justify-end pt-6 pb-12">
           <button
             type="submit"
-            className="px-8 py-3 bg-gradient-to-r from-blue-600 to-green-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-green-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 flex items-center gap-2 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+            className="px-8 py-3 w-full sm:w-max flex items-center justify-center bg-gradient-to-r from-blue-600 to-green-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-green-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 flex items-center gap-2 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
           >
             <BiSave className="w-5 h-5" />
-            Save Lab Test
+            {isSubmtting ? (
+              <div className="flex items-center">
+                <svg
+                  className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                please wait...
+              </div>
+            ) : (
+              <>{testId === null ? "Save Lab Test" : "Update Lab Test"}</>
+            )}
           </button>
         </div>
       </form>
     </div>
   );
-}
+};
+
+export default LabTestForm;

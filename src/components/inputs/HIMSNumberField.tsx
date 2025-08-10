@@ -66,8 +66,8 @@ const HIMSNumberField = React.forwardRef<
           type="number"
           disabled={isDisabled}
           placeholder={placeholderText}
-          className={`w-full custom-input ${
-            error ? "custom-input-error-border-color" : "custom-input-border"
+          className={`w-full rounded-md text-sm p-2  ${
+            error ? "border border-red-500" : "border border-gray-200"
           }`}
           min={min !== undefined ? min.toString() : undefined}
           max={max !== undefined ? max.toString() : undefined}
@@ -76,7 +76,7 @@ const HIMSNumberField = React.forwardRef<
         />
 
         {error && (
-          <small className="absolute bottom-1 left-0 custom-error-text-color custom-error-text-size">
+          <small className="absolute bottom-1 left-0 text-red-500 text-[11px]">
             {error}
           </small>
         )}

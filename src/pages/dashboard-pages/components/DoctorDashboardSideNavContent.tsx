@@ -35,6 +35,22 @@ const DoctorDashboardSideNavContent: React.FC<
 
       <button
         className="w-full"
+        onClick={() => handleNavLinkChange("/dashboard/doctor/lab-tests/new")}
+      >
+        <li
+          className={`w-full flex items-center gap-5 px-8 py-4 ${
+            currentPath === "/dashboard/doctor/lab-tests/new"
+              ? "text-white"
+              : "text-gray-500"
+          } transition-all text-sm hover:text-gray-400 cursor-pointer`}
+        >
+          <CiBeaker1 fontSize={22} className="" />
+          Lab Test Create
+        </li>
+      </button>
+
+      <button
+        className="w-full"
         onClick={() => handleNavLinkChange("/dashboard/doctor/lab-tests")}
       >
         <li
@@ -45,7 +61,7 @@ const DoctorDashboardSideNavContent: React.FC<
           } transition-all text-sm hover:text-gray-400 cursor-pointer`}
         >
           <CiBeaker1 fontSize={22} className="" />
-          Lab Test Manage
+          Lab Tests
         </li>
       </button>
 

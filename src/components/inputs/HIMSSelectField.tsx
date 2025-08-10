@@ -89,15 +89,15 @@ const HIMSSelectField = React.forwardRef<
           onChange={onChange}
           onBlur={onBlur}
           disabled={isDisabled}
-          className={`px-5 py-2 text-sm h-[40px] min-h-[40px] max-h-[40px] ${
-            error ? "custom-input-error-border-color" : "custom-input-border"
-          } no-scrollbar`}
+          className={`w-full rounded-md text-sm p-2 ${
+            error ? "border border-red-500" : "border border-gray-200"
+          }`}
         >
           {selectableOptions}
         </select>
 
         {error && (
-          <small className="absolute bottom-1 left-0 custom-error-text-color custom-error-text-size">
+          <small className="absolute bottom-1 left-0 text-red-500 text-[11px]">
             {error}
           </small>
         )}

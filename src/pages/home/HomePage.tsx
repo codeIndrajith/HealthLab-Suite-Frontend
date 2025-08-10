@@ -31,21 +31,6 @@ const HomePage: React.FC = () => {
           </span>
         </div>
 
-        <nav className="hidden md:flex items-center space-x-8">
-          <a
-            href="#about"
-            className="text-gray-600 hover:text-gray-900 transition-colors"
-          >
-            About
-          </a>
-          <a
-            href="#contact"
-            className="text-gray-600 hover:text-gray-900 transition-colors"
-          >
-            Contact
-          </a>
-        </nav>
-
         {auth.isAuthenticated === false ? (
           <div className="flex items-center space-x-3">
             <button

@@ -65,7 +65,7 @@ const HIMSRadioGroup = <T extends object, U extends keyof T>({
 
         {/* ERROR MESSAGE */}
         {error && (
-          <small className="absolute bottom-0 left-0 custom-error-text-color custom-error-text-size">
+          <small className="absolute bottom-1 left-0 text-red-500 text-[11px]">
             {error}
           </small>
         )}
@@ -114,7 +114,7 @@ const HIMSRadioGroupOption: React.FC<HIMSRadioGroupOptionProps> = ({
   isDisabled = false,
 }) => {
   return (
-    <div className="flex items-center gap-2 border-none border-primary px-3 py-2 rounded-sm my-custom-box-shadow">
+    <div className="flex items-center gap-2 border-none border-primary px-3 py-2 rounded-sm bg-white shadow-lg">
       {OptionIcon && <OptionIcon />}
       <input
         type="radio"
