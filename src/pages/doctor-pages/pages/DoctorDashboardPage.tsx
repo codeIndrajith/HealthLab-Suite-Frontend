@@ -13,6 +13,8 @@ import {
   FiArrowRight,
   FiStar,
 } from "react-icons/fi";
+import { useAppSelector } from "../../../redux/reactReduxTypedHooks";
+import { selectAuthSliceUser } from "../../../redux/slices/authSlice";
 
 // Mock data
 const dashboardStats = {
@@ -295,6 +297,7 @@ const QuickActionButton: React.FC<{
 
 // Main Dashboard Component
 const DoctorDashboardPage: React.FC = () => {
+  const authUser = useAppSelector(selectAuthSliceUser);
   const currentTime = new Date().toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",
@@ -311,6 +314,15 @@ const DoctorDashboardPage: React.FC = () => {
     // Implement navigation or modal opening logic here
   };
 
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+
+    if (hour >= 5 && hour < 12) return "Good Morning";
+    if (hour >= 12 && hour < 17) return "Good Afternoon";
+    if (hour >= 17 && hour < 21) return "Good Evening";
+    return "Good Night";
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 overflow-y-auto h-full pb-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -320,7 +332,7 @@ const DoctorDashboardPage: React.FC = () => {
             <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  Good Morning, Dr. Smith
+                  {getGreeting()}, Dr. {authUser?.name}
                 </h1>
                 <p className="text-gray-600 mt-1">
                   {currentDate} • {currentTime}
@@ -329,20 +341,6 @@ const DoctorDashboardPage: React.FC = () => {
                   You have {dashboardStats.appointmentsToday} appointments
                   scheduled for today
                 </p>
-              </div>
-              <div className="hidden md:flex items-center gap-4">
-                <div className="text-right">
-                  <div className="flex items-center gap-2">
-                    <FiStar className="w-5 h-5 text-yellow-500" />
-                    <span className="text-lg font-semibold text-gray-900">
-                      4.9
-                    </span>
-                  </div>
-                  <p className="text-sm text-gray-500">Patient Rating</p>
-                </div>
-                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-                  <span className="text-white text-xl font-semibold">DS</span>
-                </div>
               </div>
             </div>
           </div>
@@ -388,23 +386,7 @@ const DoctorDashboardPage: React.FC = () => {
           <h2 className="text-xl font-semibold text-gray-900 mb-4">
             Quick Actions
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <QuickActionButton
-              title="New Patient"
-              description="Register a new patient"
-              icon={FiPlus}
-              color="text-blue-600"
-              bgColor="bg-blue-100"
-              onClick={() => handleQuickAction("new-patient")}
-            />
-            <QuickActionButton
-              title="Schedule Appointment"
-              description="Book a new appointment"
-              icon={FiCalendar}
-              color="text-green-600"
-              bgColor="bg-green-100"
-              onClick={() => handleQuickAction("schedule-appointment")}
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <QuickActionButton
               title="View Lab Tests"
               description="Check pending results"
@@ -414,8 +396,8 @@ const DoctorDashboardPage: React.FC = () => {
               onClick={() => handleQuickAction("view-lab-tests")}
             />
             <QuickActionButton
-              title="Patient Records"
-              description="Access medical records"
+              title="Patient Request"
+              description="Access lab test records"
               icon={FiFileText}
               color="text-purple-600"
               bgColor="bg-purple-100"
@@ -425,48 +407,7 @@ const DoctorDashboardPage: React.FC = () => {
         </div>
 
         {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Recent Activities */}
-          <div className="lg:col-span-1">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-gray-900">
-                  Recent Activities
-                </h3>
-                <button className="text-blue-600 hover:text-blue-700 text-sm font-medium">
-                  View All
-                </button>
-              </div>
-              <div className="space-y-2">
-                {recentActivities.map((activity) => (
-                  <ActivityItem key={activity.id} activity={activity} />
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Upcoming Appointments */}
-          <div className="lg:col-span-1">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-gray-900">
-                  Today's Appointments
-                </h3>
-                <button className="text-blue-600 hover:text-blue-700 text-sm font-medium">
-                  View Schedule
-                </button>
-              </div>
-              <div className="space-y-2">
-                {upcomingAppointments.map((appointment) => (
-                  <AppointmentItem
-                    key={appointment.id}
-                    appointment={appointment}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-
+        <div className="grid grid-cols-1 gap-8">
           {/* Recent Lab Tests */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">

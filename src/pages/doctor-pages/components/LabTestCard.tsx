@@ -75,10 +75,10 @@ const LabTestCard: React.FC<{ labTest: Test }> = ({ labTest }) => {
         {/* Key Information */}
         <div className="grid grid-cols-2 gap-4 mb-4">
           <div className="flex items-center gap-2">
-            <FiDollarSign className="text-green-600 w-4 h-4" />
+            <p className="text-green-600">RS</p>
             <span className="text-sm text-gray-600">Price:</span>
             <span className="text-sm font-semibold text-gray-900">
-              ${labTest.price}
+              Rs.{labTest.price}
             </span>
           </div>
           <div className="flex items-center gap-2">

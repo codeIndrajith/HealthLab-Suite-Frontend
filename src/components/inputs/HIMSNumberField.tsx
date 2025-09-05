@@ -56,7 +56,9 @@ const HIMSNumberField = React.forwardRef<
           </div>
         )}
 
-        {extraInfo && <small>{extraInfo}</small>}
+        {extraInfo && (
+          <small className="text-[10px] text-gray-500">{extraInfo}</small>
+        )}
 
         <input
           ref={ref}

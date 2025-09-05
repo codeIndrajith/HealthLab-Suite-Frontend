@@ -3,7 +3,7 @@ import LabTestForm from "../../../forms/doctors/LabTestForm";
 
 const DoctorLabTestMangePage: React.FC = () => {
   return (
-    <div className="h-screen">
+    <div className="h-screen overflow-y-auto">
       <LabTestForm />
     </div>
   );

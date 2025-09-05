@@ -3,7 +3,7 @@
 import type React from "react";
 
 import { useEffect, useState } from "react";
-import { BiChevronDown, BiSave } from "react-icons/bi";
+import { BiSave } from "react-icons/bi";
 import HIMSSelectField from "../../components/inputs/HIMSSelectField";
 import { CiBeaker1 } from "react-icons/ci";
 import { useQuery } from "@tanstack/react-query";
@@ -37,7 +37,7 @@ import {
   updateTest,
 } from "../../api/doctor/lab-tests/labTest.api";
 import toast from "react-hot-toast";
-import { useLocation, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export interface FastingOption {
   id: boolean;
@@ -52,9 +52,9 @@ export const fastingOptions: FastingOption[] = [
 const LabTestForm: React.FC = () => {
   const params = useParams();
   const testId = params?.testId || null;
-  console.log(testId);
   const axiosPrivate = useAxiosPrivate();
-  const [isSubmtting, setIsSubmitting] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   const { data: testCategories, isLoading } = useQuery({
     queryKey: [TEST_CATEGORY],
@@ -142,6 +142,7 @@ const LabTestForm: React.FC = () => {
         const res = await updateTest({ formData: data, testId, axiosPrivate });
         if (res.success) {
           toast.success("Lab test update successfull");
+          navigate("/dashboard/doctor/lab-tests");
         }
       }
     } catch (error: any) {
@@ -152,7 +153,7 @@ const LabTestForm: React.FC = () => {
   };
 
   return (
-    <div className="bg-white h-screen overflow-y-auto">
+    <div className="bg-white h-screen overflow-y-auto pb-8">
       {/* Header */}
       <div className="bg-gradient-to-r from-blue-600 to-green-600 p-8 sm:px-16 sm:py-6">
         <h1 className="text-3xl font-bold text-white mb-2">
@@ -254,6 +255,7 @@ const LabTestForm: React.FC = () => {
                 placeholderText="Enter Turnaround Time"
                 min={0}
                 isRequired
+                extraInfo="(turnaround time (TAT) is the total duration from the ordering of a test, or the receipt of the sample at the lab, to the delivery of the final, verified report to the patient)"
                 {...register("turnaroundTime", {
                   setValueAs: (value: string) => (value ? Number(value) : 0),
                 })}
@@ -306,7 +308,7 @@ const LabTestForm: React.FC = () => {
             className="px-8 py-3 w-full sm:w-max flex items-center justify-center bg-gradient-to-r from-blue-600 to-green-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-green-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 flex items-center gap-2 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
           >
             <BiSave className="w-5 h-5" />
-            {isSubmtting ? (
+            {isSubmitting ? (
               <div className="flex items-center">
                 <svg
                   className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
