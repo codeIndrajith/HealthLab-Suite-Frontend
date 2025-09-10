@@ -15,7 +15,7 @@ export const userSignup = async ({
       name: formData.name,
       email: formData.email,
       password: formData.password,
-      role: "Doctor",
+      role: formData.role,
     };
 
     const response = await axiosPrivate.post(

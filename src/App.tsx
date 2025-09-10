@@ -13,6 +13,7 @@ import DoctorDashboardPage from "./pages/doctor-pages/pages/DoctorDashboardPage"
 import DoctorLabTestMangePage from "./pages/doctor-pages/pages/DoctorLabTestMangePage";
 import DoctorPatientTestManage from "./pages/doctor-pages/pages/DoctorPatientTestManage";
 import DoctorViewAllLabTestPage from "./pages/doctor-pages/pages/DoctorViewAllLabTestPage";
+import CollectionAgentLayoutPage from "./pages/collectionAgent-pages/CollectionAgentLayoutPage";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route path="/signup" element={<SignupPage />} />
         <Route element={<PersistAuth />}>
           <Route index element={<HomePage />} />
+          {/* Doctor Routes */}
           <Route path="/dashboard" element={<DoctorLayoutPage />}>
             <Route path="/dashboard/doctor" element={<DoctorDashboardPage />} />
             <Route
@@ -44,12 +46,15 @@ function App() {
               element={<DoctorPatientTestManage />}
             />
           </Route>
+
+          {/* Collection Agent Route */}
+          <Route
+            path="/dashboard/collection-agent"
+            element={<CollectionAgentLayoutPage />}
+          ></Route>
         </Route>
 
         <Route path="/onboarding" element={<OnboardingPage />} />
-
-        {/* Helpdesk Dashboard Routes Group */}
-        {/* {DoctorRoutesGroup()} */}
 
         {/* 401 - Unauthorized Page */}
         <Route path="/unauthorized" element={<UnauthorizedPage />} />

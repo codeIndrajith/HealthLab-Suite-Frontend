@@ -27,9 +27,15 @@ const SignUpPage: React.FC = () => {
     register,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useForm<SignUpSchemaType>({
     resolver: zodResolver(signUpSchema),
+    defaultValues: {
+      role: "Doctor",
+    },
   });
+
+  const selectedRole = watch("role");
 
   const signUpHandler = async (data: SignUpSchemaType) => {
     setIsLoading(true);
@@ -38,17 +44,21 @@ const SignUpPage: React.FC = () => {
       if (response.success) {
         const token = response?.token ?? "";
         localStorage.setItem("token", token);
+        const authData = {
+          id: response.user?.id,
+          name: response.user?.name,
+          email: response.user?.email,
+          user_role: response.user?.user_role,
+        };
+        dispatch(setAuthUser(authData));
         if (response?.user.user_role === "Doctor") {
-          const authData = {
-            id: response.user?.id,
-            name: response.user?.name,
-            email: response.user?.email,
-            user_role: response.user?.user_role,
-          };
-          dispatch(setAuthUser(authData));
           navigate("/dashboard/doctor");
+        } else if (response?.user.user_role === "CollectionAgent") {
+          navigate("/dashboard/collection-agent");
+        } else {
+          navigate("/dashboard/lab-staf");
         }
-        toast.success("Sign In Complete");
+        toast.success("Sign Up Complete");
       }
     } catch (error: any) {
       toast.error(error.toString());
@@ -139,24 +149,47 @@ const SignUpPage: React.FC = () => {
                   {...register("password")}
                   error={errors.password?.message?.toString()}
                 />
+              </div>
 
-                {/* <div className="text-center mt-4">
-                  <p className="text-sm text-gray-500 mb-4">Sign up as</p>
-                  <div className="flex justify-center space-x-6 text-xs text-gray-400">
-                    <span className="flex items-center">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full mr-2"></div>
-                      Doctor
-                    </span>
-                    <span className="flex items-center">
-                      <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
-                      Collection Agent
-                    </span>
-                    <span className="flex items-center">
-                      <div className="w-2 h-2 bg-purple-500 rounded-full mr-2"></div>
-                      Lab Staff
-                    </span>
-                  </div>
-                </div> */}
+              {/* Role Selection - Radio Buttons */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Select Role <span className="text-red-500">*</span>
+                </label>
+                <div className="grid grid-cols-2 gap-4">
+                  {["Doctor", "CollectionAgent", "LabStaff"].map((role) => (
+                    <div key={role} className="flex items-center">
+                      <input
+                        type="radio"
+                        id={role}
+                        value={role}
+                        {...register("role", {
+                          required: "Please select a role",
+                        })}
+                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                      />
+                      <label
+                        htmlFor={role}
+                        className={`ml-2 block text-sm font-medium cursor-pointer rounded-lg px-3 py-2 w-full ${
+                          selectedRole === role
+                            ? "bg-blue-100 text-blue-800 border border-blue-300"
+                            : "text-gray-700 bg-gray-100 border border-gray-200"
+                        }`}
+                      >
+                        {role === "CollectionAgent"
+                          ? "Collection Agent"
+                          : role === "LabStaff"
+                          ? "Lab Staff"
+                          : role}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+                {errors.role && (
+                  <p className="mt-1 text-sm text-red-600">
+                    {errors.role.message}
+                  </p>
+                )}
               </div>
 
               {/* Submit Button */}

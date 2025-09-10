@@ -23,7 +23,8 @@ const PersistAuth: React.FC = () => {
         }
 
         const response = await authUserProfile(axiosPrivate);
-        if (response && response?.data?.user_role === "Doctor") {
+        console.log(response);
+        if (response) {
           const authData = {
             id: response.data?.id,
             name: response.data?.name,

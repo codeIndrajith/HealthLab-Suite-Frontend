@@ -37,18 +37,32 @@ const SignInPage: React.FC = () => {
       if (response.success) {
         const token = response?.token ?? "";
         localStorage.setItem("token", token);
+        const authData = {
+          id: response.user?.id,
+          name: response.user?.name,
+          email: response.user?.email,
+          user_role: response.user?.user_role,
+        };
+        dispatch(setAuthUser(authData));
         if (response?.user.user_role === "Doctor") {
-          const authData = {
-            id: response.user?.id,
-            name: response.user?.name,
-            email: response.user?.email,
-            user_role: response.user?.user_role,
-          };
-          dispatch(setAuthUser(authData));
           navigate("/dashboard/doctor");
+        } else if (response?.user.user_role === "CollectionAgent") {
+          navigate("/dashboard/collection-agent");
+        } else {
+          navigate("/dashboard/lab-staf");
         }
         toast.success("Sign In Complete");
       }
+      // if (response?.user.user_role === "Doctor") {
+      //   const authData = {
+      //     id: response.user?.id,
+      //     name: response.user?.name,
+      //     email: response.user?.email,
+      //     user_role: response.user?.user_role,
+      //   };
+      //   dispatch(setAuthUser(authData));
+      //   navigate("/dashboard/doctor");
+      // }
     } catch (error: any) {
       toast.error(error.toString());
     } finally {

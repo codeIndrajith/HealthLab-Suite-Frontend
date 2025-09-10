@@ -21,6 +21,7 @@ export const signUpSchema = z.object({
     .regex(/[^A-Za-z0-9]/, {
       message: "Password must contain at least one special character",
     }),
+  role: z.string().optional(),
 });
 
 export type SignUpSchemaType = z.infer<typeof signUpSchema>;
