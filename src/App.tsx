@@ -14,6 +14,7 @@ import DoctorLabTestMangePage from "./pages/doctor-pages/pages/DoctorLabTestMang
 import DoctorPatientTestManage from "./pages/doctor-pages/pages/DoctorPatientTestManage";
 import DoctorViewAllLabTestPage from "./pages/doctor-pages/pages/DoctorViewAllLabTestPage";
 import CollectionAgentLayoutPage from "./pages/collectionAgent-pages/CollectionAgentLayoutPage";
+import ManageRequstsPage from "./pages/dashboard-pages/collection-agent/manage-requests/ManageRequstsPage";
 
 function App() {
   return (
@@ -51,7 +52,12 @@ function App() {
           <Route
             path="/dashboard/collection-agent"
             element={<CollectionAgentLayoutPage />}
-          ></Route>
+          >
+            <Route
+              path="/dashboard/collection-agent/manage-requests"
+              element={<ManageRequstsPage />}
+            />
+          </Route>
         </Route>
 
         <Route path="/onboarding" element={<OnboardingPage />} />

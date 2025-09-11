@@ -38,11 +38,13 @@ const CollectionAgentDashboardSideNavContent: React.FC<
 
       <button
         className="w-full"
-        onClick={() => handleNavLinkChange("/dashboard/doctor/lab-tests/new")}
+        onClick={() =>
+          handleNavLinkChange("/dashboard/collection-agent/manage-requests")
+        }
       >
         <li
           className={`w-full flex items-center gap-5 px-8 py-4 ${
-            currentPath === "/dashboard/doctor/lab-tests/new"
+            currentPath === "/dashboard/collection-agent/manage-request"
               ? "text-white"
               : "text-gray-500"
           } transition-all text-sm hover:text-gray-400 cursor-pointer`}
