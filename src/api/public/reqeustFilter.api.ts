@@ -50,6 +50,11 @@ export interface IPatientRequest {
   patient: Patient;
 }
 
+interface CollectSampleParams {
+  testRequestId: string;
+  axiosPrivate: AxiosInstance;
+}
+
 interface PatientRequestFilterParams {
   reqeustId: string;
   axiosPrivate: AxiosInstance;
@@ -62,6 +67,42 @@ export const patientRequestFilter = async ({
   try {
     const response = await axiosPrivate.get(
       `/api/v1/lab-test?requestId=${reqeustId}`
+    );
+    return response.data;
+  } catch (error: any) {
+    let errMsg: string = error.response.data.error;
+    if (error?.message === "Network Error") {
+      errMsg = "Service Unavailable";
+    }
+    throw new Error(errMsg);
+  }
+};
+
+export const collectSample = async ({
+  testRequestId,
+  axiosPrivate,
+}: CollectSampleParams) => {
+  try {
+    const response = await axiosPrivate.put(
+      `/api/v1/collection-agents/samples/${testRequestId}/collected`
+    );
+    return response.data;
+  } catch (error: any) {
+    let errMsg: string = error.response.data.error;
+    if (error?.message === "Network Error") {
+      errMsg = "Service Unavailable";
+    }
+    throw new Error(errMsg);
+  }
+};
+
+export const sendLabToTheRequest = async ({
+  testRequestId,
+  axiosPrivate,
+}: CollectSampleParams) => {
+  try {
+    const response = await axiosPrivate.put(
+      `/api/v1/collection-agents/samples/${testRequestId}/sent-lab`
     );
     return response.data;
   } catch (error: any) {

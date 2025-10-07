@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -47,18 +47,24 @@ const RequestFilter: React.FC<RequestFilterProps> = ({
   const requestId = watch("requestId");
 
   const {
-    // data: patientRequest,
+    data: patientRequest,
     isLoading: loadingFilter,
     refetch,
   } = useQuery({
-    queryKey: [REQUST_FILTER, requestId],
+    queryKey: [REQUST_FILTER],
     queryFn: () =>
       patientRequestFilter({
-        reqeustId: requestId!,
+        reqeustId: requestId,
         axiosPrivate,
       }),
-    enabled: false,
+    enabled: !!requestId,
   });
+
+  useEffect(() => {
+    if (patientRequest?.success) {
+      setFilteredData(patientRequest.data[0]);
+    }
+  }, [patientRequest, setFilteredData]);
 
   const onSubmit = () => {
     setIsLoading(true);
@@ -79,6 +85,7 @@ const RequestFilter: React.FC<RequestFilterProps> = ({
   const handleReset = () => {
     reset();
     clearErrors();
+    setFilteredData(null);
     setIsOpen(false);
   };
 
