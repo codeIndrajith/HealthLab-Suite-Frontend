@@ -138,11 +138,7 @@ const HomePage: React.FC = () => {
                 </li>
                 <li className="flex items-center">
                   <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
-                  Real-time result tracking
-                </li>
-                <li className="flex items-center">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
-                  Treatment recommendations
+                  Result tracking
                 </li>
               </ul>
             </div>
@@ -168,21 +164,17 @@ const HomePage: React.FC = () => {
                 For Collection Agents
               </h3>
               <p className="text-gray-600 mb-6">
-                Streamline sample collection with mobile-friendly tools, barcode
-                scanning, and efficient route management.
+                Streamline sample collection, store results, and efficiently
+                manage patient test operations.
               </p>
               <ul className="space-y-2 text-gray-600">
                 <li className="flex items-center">
                   <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
-                  Mobile sample tracking
+                  Get results
                 </li>
                 <li className="flex items-center">
                   <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
-                  Barcode integration
-                </li>
-                <li className="flex items-center">
-                  <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
-                  Route optimization
+                  Test management
                 </li>
               </ul>
             </div>
@@ -222,49 +214,9 @@ const HomePage: React.FC = () => {
                 </li>
                 <li className="flex items-center">
                   <div className="w-2 h-2 bg-purple-500 rounded-full mr-3"></div>
-                  Result validation
+                  Result Reporting
                 </li>
               </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Stats Section */}
-      <section className="px-4 py-20 bg-gradient-to-r from-blue-600 to-green-600">
-        <div className="max-w-6xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Trusted by Healthcare Professionals
-          </h2>
-          <p className="text-xl text-blue-100 mb-12 max-w-2xl mx-auto">
-            Join thousands of medical professionals who trust LabFlow for their
-            laboratory management needs.
-          </p>
-
-          <div className="grid md:grid-cols-4 gap-8">
-            <div className="text-center">
-              <div className="text-4xl md:text-5xl font-bold text-white mb-2">
-                500+
-              </div>
-              <div className="text-blue-100">Healthcare Facilities</div>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl md:text-5xl font-bold text-white mb-2">
-                50K+
-              </div>
-              <div className="text-blue-100">Tests Processed Daily</div>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl md:text-5xl font-bold text-white mb-2">
-                99.9%
-              </div>
-              <div className="text-blue-100">Uptime Guarantee</div>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl md:text-5xl font-bold text-white mb-2">
-                24/7
-              </div>
-              <div className="text-blue-100">Support Available</div>
             </div>
           </div>
         </div>

@@ -1,20 +1,8 @@
-"use client";
-
 import type React from "react";
-import {
-  FiUsers,
-  FiCalendar,
-  FiActivity,
-  FiTrendingUp,
-  FiPlus,
-  FiFileText,
-  FiAlertCircle,
-  FiCheckCircle,
-  FiArrowRight,
-  FiStar,
-} from "react-icons/fi";
+import { FiActivity, FiFileText, FiArrowRight } from "react-icons/fi";
 import { useAppSelector } from "../../../redux/reactReduxTypedHooks";
 import { selectAuthSliceUser } from "../../../redux/slices/authSlice";
+import { useNavigate } from "react-router-dom";
 
 // Mock data
 const dashboardStats = {
@@ -24,248 +12,6 @@ const dashboardStats = {
   completedToday: 15,
 };
 
-const recentActivities = [
-  {
-    id: 1,
-    type: "appointment",
-    message: "Appointment completed with John Doe",
-    time: "2 hours ago",
-    icon: FiCheckCircle,
-    color: "text-green-600",
-  },
-  {
-    id: 2,
-    type: "lab",
-    message: "Lab results received for Sarah Wilson",
-    time: "3 hours ago",
-    icon: FiActivity,
-    color: "text-blue-600",
-  },
-  {
-    id: 3,
-    type: "alert",
-    message: "Critical lab values for Patient #1234",
-    time: "4 hours ago",
-    icon: FiAlertCircle,
-    color: "text-red-600",
-  },
-  {
-    id: 4,
-    type: "appointment",
-    message: "New appointment scheduled with Mike Johnson",
-    time: "5 hours ago",
-    icon: FiCalendar,
-    color: "text-purple-600",
-  },
-];
-
-const upcomingAppointments = [
-  {
-    id: 1,
-    patientName: "Emma Thompson",
-    time: "10:00 AM",
-    type: "Consultation",
-    status: "confirmed",
-  },
-  {
-    id: 2,
-    patientName: "David Miller",
-    time: "11:30 AM",
-    type: "Follow-up",
-    status: "confirmed",
-  },
-  {
-    id: 3,
-    patientName: "Lisa Anderson",
-    time: "2:00 PM",
-    type: "Lab Review",
-    status: "pending",
-  },
-  {
-    id: 4,
-    patientName: "Robert Brown",
-    time: "3:30 PM",
-    type: "Consultation",
-    status: "confirmed",
-  },
-];
-
-const recentLabTests = [
-  {
-    id: 1,
-    patientName: "Alice Johnson",
-    testName: "Complete Blood Count",
-    status: "completed",
-    date: "Today",
-    priority: "normal",
-  },
-  {
-    id: 2,
-    patientName: "Mark Wilson",
-    testName: "Lipid Panel",
-    status: "pending",
-    date: "Yesterday",
-    priority: "high",
-  },
-  {
-    id: 3,
-    patientName: "Jennifer Davis",
-    testName: "Thyroid Function",
-    status: "completed",
-    date: "2 days ago",
-    priority: "normal",
-  },
-];
-
-// Stats Card Component
-const StatsCard: React.FC<{
-  title: string;
-  value: number;
-  icon: React.ElementType;
-  color: string;
-  bgColor: string;
-  change?: string;
-}> = ({ title, value, icon: Icon, color, bgColor, change }) => {
-  return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-all duration-200">
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-gray-600 text-sm font-medium">{title}</p>
-          <p className="text-3xl font-bold text-gray-900 mt-2">
-            {value.toLocaleString()}
-          </p>
-          {change && (
-            <div className="flex items-center mt-2">
-              <FiTrendingUp className="w-4 h-4 text-green-600 mr-1" />
-              <span className="text-sm text-green-600 font-medium">
-                {change}
-              </span>
-            </div>
-          )}
-        </div>
-        <div className={`${bgColor} p-3 rounded-lg`}>
-          <Icon className={`w-6 h-6 ${color}`} />
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// Activity Item Component
-const ActivityItem: React.FC<{
-  activity: {
-    id: number;
-    type: string;
-    message: string;
-    time: string;
-    icon: React.ElementType;
-    color: string;
-  };
-}> = ({ activity }) => {
-  const { message, time, icon: Icon, color } = activity;
-
-  return (
-    <div className="flex items-start gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors duration-200">
-      <div className={`${color} bg-gray-50 p-2 rounded-lg`}>
-        <Icon className="w-4 h-4" />
-      </div>
-      <div className="flex-1 min-w-0">
-        <p className="text-sm text-gray-900 font-medium">{message}</p>
-        <p className="text-xs text-gray-500 mt-1">{time}</p>
-      </div>
-    </div>
-  );
-};
-
-// Appointment Item Component
-const AppointmentItem: React.FC<{
-  appointment: {
-    id: number;
-    patientName: string;
-    time: string;
-    type: string;
-    status: string;
-  };
-}> = ({ appointment }) => {
-  const { patientName, time, type, status } = appointment;
-
-  return (
-    <div className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors duration-200">
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-          <span className="text-white text-sm font-semibold">
-            {patientName.charAt(0)}
-          </span>
-        </div>
-        <div>
-          <p className="text-sm font-medium text-gray-900">{patientName}</p>
-          <p className="text-xs text-gray-500">{type}</p>
-        </div>
-      </div>
-      <div className="text-right">
-        <p className="text-sm font-medium text-gray-900">{time}</p>
-        <span
-          className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-            status === "confirmed"
-              ? "bg-green-100 text-green-800"
-              : "bg-yellow-100 text-yellow-800"
-          }`}
-        >
-          {status}
-        </span>
-      </div>
-    </div>
-  );
-};
-
-// Lab Test Item Component
-const LabTestItem: React.FC<{
-  labTest: {
-    id: number;
-    patientName: string;
-    testName: string;
-    status: string;
-    date: string;
-    priority: string;
-  };
-}> = ({ labTest }) => {
-  const { patientName, testName, status, date, priority } = labTest;
-
-  return (
-    <div className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors duration-200">
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-teal-600 rounded-full flex items-center justify-center">
-          <FiActivity className="w-5 h-5 text-white" />
-        </div>
-        <div>
-          <p className="text-sm font-medium text-gray-900">{testName}</p>
-          <p className="text-xs text-gray-500">{patientName}</p>
-        </div>
-      </div>
-      <div className="text-right">
-        <div className="flex items-center gap-2">
-          <span
-            className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-              status === "completed"
-                ? "bg-green-100 text-green-800"
-                : "bg-yellow-100 text-yellow-800"
-            }`}
-          >
-            {status}
-          </span>
-          {priority === "high" && (
-            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
-              High
-            </span>
-          )}
-        </div>
-        <p className="text-xs text-gray-500 mt-1">{date}</p>
-      </div>
-    </div>
-  );
-};
-
-// Quick Action Button Component
 const QuickActionButton: React.FC<{
   title: string;
   description: string;
@@ -297,6 +43,7 @@ const QuickActionButton: React.FC<{
 
 // Main Dashboard Component
 const DoctorDashboardPage: React.FC = () => {
+  const navigate = useNavigate();
   const authUser = useAppSelector(selectAuthSliceUser);
   const currentTime = new Date().toLocaleTimeString([], {
     hour: "2-digit",
@@ -346,41 +93,6 @@ const DoctorDashboardPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <StatsCard
-            title="Total Patients"
-            value={dashboardStats.totalPatients}
-            icon={FiUsers}
-            color="text-blue-600"
-            bgColor="bg-blue-100"
-            change="+12% from last month"
-          />
-          <StatsCard
-            title="Appointments Today"
-            value={dashboardStats.appointmentsToday}
-            icon={FiCalendar}
-            color="text-green-600"
-            bgColor="bg-green-100"
-            change="+3 from yesterday"
-          />
-          <StatsCard
-            title="Pending Lab Results"
-            value={dashboardStats.pendingLabResults}
-            icon={FiActivity}
-            color="text-orange-600"
-            bgColor="bg-orange-100"
-          />
-          <StatsCard
-            title="Completed Today"
-            value={dashboardStats.completedToday}
-            icon={FiCheckCircle}
-            color="text-purple-600"
-            bgColor="bg-purple-100"
-            change="+5 from yesterday"
-          />
-        </div>
-
         {/* Quick Actions */}
         <div className="mb-8">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">
@@ -388,12 +100,12 @@ const DoctorDashboardPage: React.FC = () => {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <QuickActionButton
-              title="View Lab Tests"
-              description="Check pending results"
+              title="Create Lab Tests"
+              description="Manage lab tests"
               icon={FiActivity}
               color="text-orange-600"
               bgColor="bg-orange-100"
-              onClick={() => handleQuickAction("view-lab-tests")}
+              onClick={() => navigate("/dashboard/doctor/lab-tests/new")}
             />
             <QuickActionButton
               title="Patient Request"
@@ -401,30 +113,8 @@ const DoctorDashboardPage: React.FC = () => {
               icon={FiFileText}
               color="text-purple-600"
               bgColor="bg-purple-100"
-              onClick={() => handleQuickAction("patient-records")}
+              onClick={() => navigate("/dashboard/doctor/patient-tests")}
             />
-          </div>
-        </div>
-
-        {/* Main Content Grid */}
-        <div className="grid grid-cols-1 gap-8">
-          {/* Recent Lab Tests */}
-          <div className="lg:col-span-1">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-gray-900">
-                  Recent Lab Tests
-                </h3>
-                <button className="text-blue-600 hover:text-blue-700 text-sm font-medium">
-                  View All
-                </button>
-              </div>
-              <div className="space-y-2">
-                {recentLabTests.map((labTest) => (
-                  <LabTestItem key={labTest.id} labTest={labTest} />
-                ))}
-              </div>
-            </div>
           </div>
         </div>
       </div>

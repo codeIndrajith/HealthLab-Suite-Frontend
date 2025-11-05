@@ -24,9 +24,9 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
         <div className="flex justify-between items-center h-16">
           {/* Logo on the left */}
           <div className="flex-shrink-0 flex items-center">
-            <Link to={`${brandNavigationTo}`}>
+            <div>
               <img className="h-16 w-auto" src={logo} alt="Logo" />
-            </Link>
+            </div>
           </div>
 
           {/* Signup button on the right */}

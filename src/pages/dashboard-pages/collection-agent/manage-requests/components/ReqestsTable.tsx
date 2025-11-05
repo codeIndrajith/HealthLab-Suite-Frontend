@@ -397,17 +397,15 @@ const ReqestsTable: React.FC<RequestsTableProps> = ({
                       </div>
                     ) : (
                       <div className="flex items-center gap-3 justify-end">
-                        {/* View Report Button */}
-                        <button className="flex text-xs cursor-pointer items-center gap-2 px-4 py-2 rounded-xl border border-gray-300 text-gray-700 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 transition-all duration-200 shadow-sm">
+                        <a
+                          href={filteredData?.pdfLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex text-xs cursor-pointer items-center gap-2 px-4 py-2 rounded-xl border border-gray-300 text-gray-700 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 transition-all duration-200 shadow-sm"
+                        >
                           <FiEye className="w-4 h-4" />
                           View Report
-                        </button>
-
-                        {/* Finalize Report Button */}
-                        <button className="flex text-xs cursor-pointer items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700 transition-all duration-200 shadow-md">
-                          <FiCheckCircle className="w-4 h-4" />
-                          Finalize Report
-                        </button>
+                        </a>
                       </div>
                     )}
                   </td>
@@ -417,8 +415,8 @@ const ReqestsTable: React.FC<RequestsTableProps> = ({
           </div>
         </div>
       ) : (
-        <div className="w-full flex justify-center">
-          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 shadow-sm rounded-2xl p-8 w-full text-center max-w-md mx-auto">
+        <div className="w-full flex">
+          <div className="p-8 w-full text-center">
             <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <LuSlidersHorizontal className="w-8 h-8 text-blue-600" />
             </div>

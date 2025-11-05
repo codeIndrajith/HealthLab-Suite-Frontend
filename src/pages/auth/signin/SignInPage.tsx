@@ -43,13 +43,16 @@ const SignInPage: React.FC = () => {
           email: response.user?.email,
           user_role: response.user?.user_role,
         };
+
         dispatch(setAuthUser(authData));
         if (response?.user.user_role === "Doctor") {
           navigate("/dashboard/doctor");
         } else if (response?.user.user_role === "CollectionAgent") {
           navigate("/dashboard/collection-agent");
+        } else if (response?.user.user_role === "LabStaff") {
+          navigate("/dashboard/lab-staff/manage-requests");
         } else {
-          navigate("/dashboard/lab-staf");
+          navigate("/unauthorized");
         }
         toast.success("Sign In Complete");
       }

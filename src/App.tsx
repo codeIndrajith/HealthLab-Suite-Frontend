@@ -15,6 +15,9 @@ import DoctorPatientTestManage from "./pages/doctor-pages/pages/DoctorPatientTes
 import DoctorViewAllLabTestPage from "./pages/doctor-pages/pages/DoctorViewAllLabTestPage";
 import CollectionAgentLayoutPage from "./pages/collectionAgent-pages/CollectionAgentLayoutPage";
 import ManageRequstsPage from "./pages/dashboard-pages/collection-agent/manage-requests/ManageRequstsPage";
+import LabStaffLayoutPage from "./pages/lab-staff-pages/LabStaffLayoutPage";
+import LabStaffTestManagePage from "./pages/lab-staff-pages/pages/LabStaffTestManagePage";
+import LabStaffResultProcessPage from "./pages/lab-staff-pages/pages/LabStaffResultProcessPage";
 
 function App() {
   return (
@@ -56,6 +59,19 @@ function App() {
             <Route
               path="/dashboard/collection-agent/manage-requests"
               element={<ManageRequstsPage />}
+            />
+          </Route>
+
+          {/* Lab Staff Route */}
+          <Route path="/dashboard/lab-staff" element={<LabStaffLayoutPage />}>
+            <Route
+              path="/dashboard/lab-staff/manage-requests"
+              element={<LabStaffTestManagePage />}
+            />
+
+            <Route
+              path="/dashboard/lab-staff/manage-requests/:testRequestId/results-process"
+              element={<LabStaffResultProcessPage />}
             />
           </Route>
         </Route>
