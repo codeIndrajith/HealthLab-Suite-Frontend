@@ -151,3 +151,18 @@ export const completeTestRequest = async (
     throw new Error(errMsg);
   }
 };
+
+export const getAllCompleteTestRequest = async (
+  axiosPrivate: AxiosInstance
+): Promise<any> => {
+  try {
+    const response = await axiosPrivate.get(`/api/v1/lab-staff/complete`);
+    return response.data;
+  } catch (error: any) {
+    let errMsg: string = error.response.data.error;
+    if (error?.message === "Network Error") {
+      errMsg = "Service Unavailable";
+    }
+    throw new Error(errMsg);
+  }
+};

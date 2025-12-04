@@ -72,65 +72,6 @@ const LabStaffTestManagePage: React.FC = () => {
           </div>
         </div>
 
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <div className="flex items-center">
-              <div className="p-3 bg-blue-100 rounded-lg mr-4">
-                <FaFlask className="text-blue-600 text-xl" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Total Requests</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {stats.total}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <div className="flex items-center">
-              <div className="p-3 bg-red-100 rounded-lg mr-4">
-                <FaExclamationTriangle className="text-red-600 text-xl" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Urgent</p>
-                <p className="text-2xl font-bold text-red-600">
-                  {stats.urgent}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <div className="flex items-center">
-              <div className="p-3 bg-green-100 rounded-lg mr-4">
-                <FaCheckCircle className="text-green-600 text-xl" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Completed</p>
-                <p className="text-2xl font-bold text-green-600">
-                  {stats.completed}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <div className="flex items-center">
-              <div className="p-3 bg-yellow-100 rounded-lg mr-4">
-                <FaFlask className="text-yellow-600 text-xl" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Pending</p>
-                <p className="text-2xl font-bold text-yellow-600">
-                  {stats.pending}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
         {/* Requests Section */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
           <div className="px-6 py-4 border-b border-gray-200">
@@ -158,12 +99,7 @@ const LabStaffTestManagePage: React.FC = () => {
             ) : (
               <div className="space-y-6">
                 {labRequests.map((request: LabRequest) => (
-                  <LabRequestCard
-                    key={request.id}
-                    request={request}
-                    // onFinalize={handleFinalize}
-                    // isFinalizing={finalizeMutation.isPending}
-                  />
+                  <LabRequestCard key={request.id} request={request} />
                 ))}
               </div>
             )}

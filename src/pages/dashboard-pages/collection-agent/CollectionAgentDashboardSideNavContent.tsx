@@ -20,7 +20,7 @@ const CollectionAgentDashboardSideNavContent: React.FC<
 > = ({ handleNavLinkChange, currentPath }) => {
   return (
     <>
-      <button
+      {/* <button
         className="w-full"
         onClick={() => handleNavLinkChange("/dashboard/collection-agent")}
       >
@@ -34,7 +34,7 @@ const CollectionAgentDashboardSideNavContent: React.FC<
           <LuLayoutDashboard fontSize={20} className="" />
           Dashboard
         </li>
-      </button>
+      </button> */}
 
       <button
         className="w-full"

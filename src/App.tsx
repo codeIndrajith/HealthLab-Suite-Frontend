@@ -18,6 +18,7 @@ import ManageRequstsPage from "./pages/dashboard-pages/collection-agent/manage-r
 import LabStaffLayoutPage from "./pages/lab-staff-pages/LabStaffLayoutPage";
 import LabStaffTestManagePage from "./pages/lab-staff-pages/pages/LabStaffTestManagePage";
 import LabStaffResultProcessPage from "./pages/lab-staff-pages/pages/LabStaffResultProcessPage";
+import CompleteRequestPage from "./pages/dashboard-pages/collection-agent/complete-request/CompleteRequestPage";
 
 function App() {
   return (
@@ -72,6 +73,11 @@ function App() {
             <Route
               path="/dashboard/lab-staff/manage-requests/:testRequestId/results-process"
               element={<LabStaffResultProcessPage />}
+            />
+
+            <Route
+              path="/dashboard/lab-staff/complete-requests"
+              element={<CompleteRequestPage />}
             />
           </Route>
         </Route>

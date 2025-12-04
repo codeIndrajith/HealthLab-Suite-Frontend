@@ -48,7 +48,7 @@ const SignInPage: React.FC = () => {
         if (response?.user.user_role === "Doctor") {
           navigate("/dashboard/doctor");
         } else if (response?.user.user_role === "CollectionAgent") {
-          navigate("/dashboard/collection-agent");
+          navigate("/dashboard/collection-agent/manage-requests");
         } else if (response?.user.user_role === "LabStaff") {
           navigate("/dashboard/lab-staff/manage-requests");
         } else {

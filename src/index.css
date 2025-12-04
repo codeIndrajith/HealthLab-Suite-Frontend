@@ -1,1 +1,5 @@
 @import "tailwindcss";
+
+.grid {
+  align-items: flex-start; /* Instead of stretch */
+}

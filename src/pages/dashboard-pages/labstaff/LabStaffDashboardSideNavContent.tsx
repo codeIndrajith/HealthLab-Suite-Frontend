@@ -1,4 +1,5 @@
 import React from "react";
+import { FaNoteSticky } from "react-icons/fa6";
 import { GrDocumentPerformance } from "react-icons/gr";
 import { LuLayoutDashboard } from "react-icons/lu";
 
@@ -43,6 +44,24 @@ const LabStaffDashboardSideNavContent: React.FC<
         >
           <GrDocumentPerformance fontSize={22} className="" />
           Test Requests Manage
+        </li>
+      </button>
+
+      <button
+        className="w-full"
+        onClick={() =>
+          handleNavLinkChange("/dashboard/lab-staff/complete-requests")
+        }
+      >
+        <li
+          className={`w-full flex items-center gap-5 px-8 py-4 ${
+            currentPath === "/dashboard/lab-staff/complete-requests"
+              ? "text-white"
+              : "text-gray-500"
+          } transition-all text-sm hover:text-gray-400 cursor-pointer`}
+        >
+          <FaNoteSticky fontSize={22} className="" />
+          Complete Test Requests
         </li>
       </button>
     </>
