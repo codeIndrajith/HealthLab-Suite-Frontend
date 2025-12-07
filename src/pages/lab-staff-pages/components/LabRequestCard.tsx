@@ -115,9 +115,7 @@ const LabRequestCard: React.FC<LabRequestCardProps> = ({
         </div>
         <div>
           <p className="text-sm text-gray-500">Payment</p>
-          <p className="font-medium text-gray-900">
-            {request.paymentMethod} • {request.isPaid ? "Paid" : "Pending"}
-          </p>
+          <p className="font-medium text-gray-900">{request.paymentMethod}</p>
         </div>
       </div>
 
